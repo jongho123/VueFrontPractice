@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h1>My Todo Page</h1>
+  <div class="ui container text">
+    <h1 class="ui header">My Todo Page</h1>
     <TodoPage />
   </div>
 </template>

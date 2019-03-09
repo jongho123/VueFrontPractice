@@ -1,12 +1,18 @@
 <template>
-  <div>
-    <BaseInputItem v-model="newTodoText" placeholder="new Todo" @keyup.enter="addTodo"/>
-    <div v-if="todos.length">
-      <TodoListItem v-for="todo in todos" :key="todo.id" :todo="todo" v-on="itemListeners"/>
+  <div class="ui two column centered stackable grid container">
+    <div class="column">
+      <div class="ui black segment">
+        <div class="ui fluid input">
+          <BaseInputItem v-model="newTodoText" placeholder="new Todo" @keyup.enter="addTodo"/>
+        </div>
+        <div v-if="todos.length">
+          <TodoListItem v-for="todo in todos" :key="todo.id" :todo="todo" v-on="itemListeners"/>
+        </div>
+        <p v-else>
+          Nothing left in the list. Add a new Todo
+        </p>
+      </div>
     </div>
-    <p v-else>
-      Nothing left in the list. Add a new Todo
-    </p>
   </div>
 </template>
 
@@ -47,6 +53,8 @@ export default {
         text: this.newTodoText.trim(),
       });
       nextTodoId += 1;
+
+      this.newTodoText = '';
     },
     removeTodo(removeId) {
       // delete rest api 실행 후 변경
@@ -61,3 +69,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+p {
+  text-align: center;
+}
+</style>

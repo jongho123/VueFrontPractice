@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <input type="text" :value="value" v-on="listeners">
-  </div>
+  <input type="text" :value="value" v-on="listeners">
 </template>
 
 <script>

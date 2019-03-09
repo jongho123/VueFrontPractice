@@ -1,9 +1,17 @@
 <template>
-  <div>
-    <input type="text" :value="todo.text" :disabled="!isEdit" v-on="inputListeners">
-    <button @click="completeTodo">{{isComplete?'완료':'미완료'}}</button>
-    <button @click="editTodo">Edit</button>
-    <button @click="$emit('remove', todo.id)">Del</button>
+  <div class="ui fluid action input">
+    <input type="text" :value="todo.text" :readonly="!isEdit" v-on="inputListeners">
+    <button class="ui icon mini button" @click="completeTodo">
+      <i v-if="isComplete" class="star icon"></i>
+      <i v-else class="star outline icon"></i>
+    </button>
+    <button class="ui icon mini button" @click="editTodo">
+      <i v-if="isEdit" class="spinner loading icon"></i>
+      <i v-else class="edit icon"></i>
+    </button>
+    <button class="ui icon mini button" @click="$emit('remove', todo.id)">
+      <i class="close icon"></i>
+    </button>
   </div>
 </template>
 
@@ -60,5 +68,4 @@ export default {
     },
   },
 };
-
 </script>
