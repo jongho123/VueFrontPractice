@@ -18,10 +18,11 @@
 
 <script>
 
+import axios from 'axios';
 import BaseInputItem from './BaseInputItem.vue';
 import TodoListItem from './TodoListItem.vue';
 
-let nextTodoId = 1;
+let nextTodoId = 0;
 
 export default {
   data() {
@@ -32,6 +33,19 @@ export default {
   },
   created() {
     // rest api로 TodoItem 데이터 얻어오기.
+    axios
+      .get('/api/todos')
+      .then((response) => {
+        if (response.status === 200) {
+          this.todos = response.data.map((todo) => {
+            const addedId = JSON.parse(JSON.stringify(todo));
+            addedId.id = nextTodoId;
+            nextTodoId += 1;
+            return addedId;
+          });
+        }
+      })
+      .catch(error => console.log(error));
   },
   components: {
     BaseInputItem,
@@ -47,24 +61,56 @@ export default {
   },
   methods: {
     addTodo() {
-      // add rest api 실행 후 변경
-      this.todos.push({
+      const newTodo = {
         id: nextTodoId,
         text: this.newTodoText.trim(),
-      });
-      nextTodoId += 1;
+        is_complete: 0,
+      };
 
-      this.newTodoText = '';
+      // 서버에 todoItem 추가 후 Vue 데이터에 추가
+      axios
+        .post('/api/todos', newTodo)
+        .then((response) => {
+          if (response.status === 200) {
+            newTodo.todo_id = response.data.insertId;
+            this.todos.push(newTodo);
+            nextTodoId += 1;
+            this.newTodoText = '';
+          }
+        })
+        .catch(error => console.log(error));
     },
     removeTodo(removeId) {
-      // delete rest api 실행 후 변경
-      this.todos = this.todos.filter(todo => todo.id !== removeId);
-    },
-    editTodo(editId, newText) {
-      const target = this.todos.findIndex(todo => todo.id === editId);
+      const target = this.todos.find(todo => todo.id === removeId);
 
-      // todoItem edit rest api 실행 후 변경
-      this.todos[target].text = newText;
+      // 서버에서 삭제 후 Vue 데이터 삭제
+      axios
+        .delete(`/api/todos/${target.todo_id}`)
+        .then((response) => {
+          if (response.status === 200) {
+            this.todos = this.todos.filter(todo => todo.id !== removeId);
+          }
+        })
+        .catch(error => console.log(error));
+    },
+    editTodo(editId, newText, newComplete) {
+      const target = this.todos.find(todo => todo.id === editId);
+
+      const editedTodo = Object.assign({}, target);
+      editedTodo.text = newText;
+      editedTodo.is_complete = newComplete;
+      console.log(editedTodo);
+
+      // 서버에서 수정 후 Vue 데이터 수정
+      axios
+        .put(`/api/todos/${target.todo_id}`, editedTodo)
+        .then((response) => {
+          if (response.status === 200) {
+            target.text = newText;
+            target.is_complete = newComplete;
+          }
+        })
+        .catch(error => console.log(error));
     },
   },
 };

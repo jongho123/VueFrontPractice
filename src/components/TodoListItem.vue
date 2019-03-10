@@ -1,8 +1,8 @@
 <template>
   <div class="ui fluid action input">
     <input type="text" :value="todo.text" :readonly="!isEdit" v-on="inputListeners">
-    <button class="ui icon mini button" @click="completeTodo">
-      <i v-if="isComplete" class="star icon"></i>
+    <button class="ui icon mini button" @click="toggleCompleteTodo">
+      <i v-if="todo.is_complete" class="star icon"></i>
       <i v-else class="star outline icon"></i>
     </button>
     <button class="ui icon mini button" @click="editTodo">
@@ -27,7 +27,6 @@ export default {
     return {
       newText: this.todo.text,
       isEdit: false,
-      isComplete: false,
     };
   },
   computed: {
@@ -57,14 +56,14 @@ export default {
       }
 
       // TodoItem edit event call
-      this.$emit('edit', this.todo.id, this.newText);
+      this.$emit('edit', this.todo.id, this.newText, this.is_complete);
     },
     // input 창에 text를 입력하면 새로운 변수에 저장
     updateText(event) {
       this.newText = event.target.value;
     },
-    completeTodo() {
-      this.isComplete = !this.isComplete;
+    toggleCompleteTodo() {
+      this.$emit('edit', this.todo.id, this.todo.text, !this.todo.is_complete);
     },
   },
 };
