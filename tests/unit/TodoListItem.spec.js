@@ -59,27 +59,16 @@ describe('TodoListItem', () => {
   });
   describe('이벤트 함수', () => {
     it('input tag input 이벤트', () => {
-      const listenerStub = sinon.stub(TodoListItem.computed, 'inputListeners');
-      let spy;
-      listenerStub.callsFake(() => {
-        const listener = {
-          input: (event) => {
-            component.vm.newText = event.target.value;
-          },
-        };
-        spy = sinon.spy(listener, 'input');
-        return listener;
-      });
-
+      const spy = sinon.spy(TodoListItem.methods, 'updateText');
       component = createComponent({ todo });
-
-      // input 이벤트 함수가 아직 호출되지 않음.
-      expect(spy.called).to.be.false;
 
       // edit 상태 변경 후 readonly 가 사라졌는지 체크
       component.vm.isEdit = true;
       component.vm.$forceUpdate();
       expect(component.find('input').attributes()).to.not.have.property('readonly');
+
+      // input 이벤트 함수가 아직 호출되지 않음.
+      expect(spy.called).to.be.false;
 
       // input에 새로운 값 입력 및 이벤트 발생
       component.find('input').element.value = 'new_text';
@@ -92,7 +81,6 @@ describe('TodoListItem', () => {
       expect(component.vm.newText).to.equal('new_text');
 
       spy.restore();
-      listenerStub.restore();
     });
     it('input tag keyup 이벤트', () => {
       component = createComponent({ todo });

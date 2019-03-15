@@ -33,9 +33,7 @@ export default {
     // input tag에 들어갈 이벤트리스너들
     inputListeners() {
       return {
-        input: (event) => {
-          this.newText = event.target.value;
-        },
+        input: this.updateText,
         keyup: (e) => {
           if (e.keyCode === 13 && this.isEdit) {
             this.editTodo();
@@ -45,6 +43,11 @@ export default {
     },
   },
   methods: {
+    // input 창에 text를 입력하면 새로운 변수에 저장
+    updateText(event) {
+      console.log('text');
+      this.newText = event.target.value;
+    },
     // TodoItem의 수정된 내용을 상위 엘리먼트에 알려줌.
     editTodo() {
       this.isEdit = !this.isEdit;

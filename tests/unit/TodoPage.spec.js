@@ -250,7 +250,7 @@ describe('TodoPage.vue', () => {
         done();
       });
     });
-    it('TodoListItem의 edit', (done) => {
+    it('TodoListItem의 edit emit', (done) => {
       // editTodo() 호출했는지 확인하기 위한 스텁
       // 내부의 기능은 동작할 필요가 없기 때문에 스텁을 이용.
       const stub = sinon.stub(component.vm, 'editTodo');
@@ -267,7 +267,7 @@ describe('TodoPage.vue', () => {
         done();
       });
     });
-    it('TodoListItem의 remove', (done) => {
+    it('TodoListItem의 remove emit', (done) => {
       // removeTodo() 호출했는지 확인하기 위한 스텁
       // 내부의 기능은 동작할 필요가 없기 때문에 스텁을 이용.
       const stub = sinon.stub(component.vm, 'removeTodo');
