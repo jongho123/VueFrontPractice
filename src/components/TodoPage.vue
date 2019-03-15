@@ -61,6 +61,9 @@ export default {
   },
   methods: {
     addTodo() {
+      if (this.newTodoText.trim() === '') {
+        return;
+      }
       const newTodo = {
         id: nextTodoId,
         text: this.newTodoText.trim(),
@@ -81,31 +84,27 @@ export default {
         .catch(error => console.log(error));
     },
     removeTodo(removeId) {
-      const target = this.todos.find(todo => todo.id === removeId);
-
       // 서버에서 삭제 후 Vue 데이터 삭제
       axios
-        .delete(`/api/todos/${target.todo_id}`)
+        .delete(`/api/todos/${removeId}`)
         .then((response) => {
           if (response.status === 200) {
-            this.todos = this.todos.filter(todo => todo.id !== removeId);
+            this.todos = this.todos.filter(todo => todo.todo_id !== removeId);
           }
         })
         .catch(error => console.log(error));
     },
     editTodo(editId, newText, newComplete) {
-      const target = this.todos.find(todo => todo.id === editId);
-
-      const editedTodo = Object.assign({}, target);
+      const editedTodo = {};
       editedTodo.text = newText;
       editedTodo.is_complete = newComplete;
-      console.log(editedTodo);
 
       // 서버에서 수정 후 Vue 데이터 수정
       axios
-        .put(`/api/todos/${target.todo_id}`, editedTodo)
+        .put(`/api/todos/${editId}`, editedTodo)
         .then((response) => {
           if (response.status === 200) {
+            const target = this.todos.find(todo => todo.todo_id === editId);
             target.text = newText;
             target.is_complete = newComplete;
           }
@@ -114,6 +113,7 @@ export default {
     },
   },
 };
+
 </script>
 
 <style scoped>

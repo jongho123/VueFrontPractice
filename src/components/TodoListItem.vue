@@ -9,7 +9,7 @@
       <i v-if="isEdit" class="spinner loading icon"></i>
       <i v-else class="edit icon"></i>
     </button>
-    <button class="ui icon mini button" @click="$emit('remove', todo.id)">
+    <button class="ui icon mini button" @click="$emit('remove', todo.todo_id)">
       <i class="close icon"></i>
     </button>
   </div>
@@ -33,7 +33,9 @@ export default {
     // input tag에 들어갈 이벤트리스너들
     inputListeners() {
       return {
-        input: this.updateText,
+        input: (event) => {
+          this.newText = event.target.value;
+        },
         keyup: (e) => {
           if (e.keyCode === 13 && this.isEdit) {
             this.editTodo();
@@ -56,14 +58,10 @@ export default {
       }
 
       // TodoItem edit event call
-      this.$emit('edit', this.todo.id, this.newText, this.is_complete);
-    },
-    // input 창에 text를 입력하면 새로운 변수에 저장
-    updateText(event) {
-      this.newText = event.target.value;
+      this.$emit('edit', this.todo.todo_id, this.newText, this.todo.is_complete);
     },
     toggleCompleteTodo() {
-      this.$emit('edit', this.todo.id, this.todo.text, !this.todo.is_complete);
+      this.$emit('edit', this.todo.todo_id, this.todo.text, !this.todo.is_complete);
     },
   },
 };
