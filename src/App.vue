@@ -1,12 +1,40 @@
 <template>
   <div id="app">
-    <div id="nav">
+    <div id="nav" v-if='is_auth'>
       <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <router-link to="/todo">Todo</router-link> |
+      <router-link to="/logout">Logout</router-link>
     </div>
-    <router-view/>
+    <div id="nav" v-else>
+      <router-link to="/">Home</router-link> |
+      <router-link to="/login">Login</router-link> |
+      <router-link to="/signup">Signup</router-link>
+    </div>
+    <router-view :is_auth.sync='is_auth'/>
   </div>
 </template>
+
+<script>
+export default {
+  // 현재 로그인된 세션이 있는지 확인
+  created() {
+    this.$http
+      .post('/api/auth/login', {})
+      .then((response) => {
+        if (response.status === 200) {
+          this.is_auth = true;
+        }
+      })
+      .catch(() => {
+      });
+  },
+  data() {
+    return {
+      is_auth: false,
+    };
+  },
+};
+</script>
 
 <style>
 #app {

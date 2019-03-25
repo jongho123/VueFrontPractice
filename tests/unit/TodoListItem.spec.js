@@ -5,7 +5,7 @@ import TodoListItem from '@/components/TodoListItem.vue';
 
 const createComponent = propsData => mount(TodoListItem, { propsData });
 
-describe('TodoListItem', () => {
+describe('TodoListItem.vue', () => {
   let component;
   let todo;
 

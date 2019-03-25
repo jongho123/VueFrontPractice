@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils';
+import { mount, createLocalVue } from '@vue/test-utils';
 import { expect } from 'chai';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
@@ -7,7 +7,10 @@ import TodoPage from '@/components/TodoPage.vue';
 import BaseInputItem from '@/components/BaseInputItem.vue';
 import TodoListItem from '@/components/TodoListItem.vue';
 
-const createComponent = propsData => mount(TodoPage, { propsData });
+const localVue = createLocalVue();
+localVue.prototype.$http = axios;
+
+const createComponent = propsData => mount(TodoPage, { propsData, localVue });
 
 describe('TodoPage.vue', () => {
   let component;
@@ -282,6 +285,22 @@ describe('TodoPage.vue', () => {
         stub.restore();
         done();
       });
+    });
+  });
+  describe('상위 컴포넌트 이벤트', () => {
+    it('Auth 만료 및 라우팅', () => {
+      const pushSpy = sinon.spy();
+
+      component = createComponent();
+      component.vm.$router = { push: pushSpy };
+
+      expect(component.emitted()).to.not.have.property('update:is_auth');
+      component.vm.expireAuth();
+
+      expect(component.emitted()).to.have.property('update:is_auth');
+      expect(component.emitted()['update:is_auth'][0]).to.include(false);
+      expect(pushSpy.called).to.be.true;
+      expect(pushSpy.args[0][0]).to.equal('/login');
     });
   });
 });

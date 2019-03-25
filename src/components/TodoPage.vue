@@ -18,7 +18,6 @@
 
 <script>
 
-import axios from 'axios';
 import BaseInputItem from './BaseInputItem.vue';
 import TodoListItem from './TodoListItem.vue';
 
@@ -33,7 +32,7 @@ export default {
   },
   created() {
     // rest api로 TodoItem 데이터 얻어오기.
-    axios
+    this.$http
       .get('/api/todos')
       .then((response) => {
         if (response.status === 200) {
@@ -45,7 +44,11 @@ export default {
           });
         }
       })
-      .catch(error => console.log(error));
+      .catch((err) => {
+        if (err.response.status === 401) {
+          this.expireAuth();
+        }
+      });
   },
   components: {
     BaseInputItem,
@@ -71,7 +74,7 @@ export default {
       };
 
       // 서버에 todoItem 추가 후 Vue 데이터에 추가
-      axios
+      this.$http
         .post('/api/todos', newTodo)
         .then((response) => {
           if (response.status === 200) {
@@ -81,18 +84,26 @@ export default {
             this.newTodoText = '';
           }
         })
-        .catch(error => console.log(error));
+        .catch((err) => {
+          if (err.response.status === 401) {
+            this.expireAuth();
+          }
+        });
     },
     removeTodo(removeId) {
       // 서버에서 삭제 후 Vue 데이터 삭제
-      axios
+      this.$http
         .delete(`/api/todos/${removeId}`)
         .then((response) => {
           if (response.status === 200) {
             this.todos = this.todos.filter(todo => todo.todo_id !== removeId);
           }
         })
-        .catch(error => console.log(error));
+        .catch((err) => {
+          if (err.response.status === 401) {
+            this.expireAuth();
+          }
+        });
     },
     editTodo(editId, newText, newComplete) {
       const editedTodo = {};
@@ -100,7 +111,7 @@ export default {
       editedTodo.is_complete = newComplete;
 
       // 서버에서 수정 후 Vue 데이터 수정
-      axios
+      this.$http
         .put(`/api/todos/${editId}`, editedTodo)
         .then((response) => {
           if (response.status === 200) {
@@ -109,7 +120,18 @@ export default {
             target.is_complete = newComplete;
           }
         })
-        .catch(error => console.log(error));
+        .catch((err) => {
+          if (err.response.status === 401) {
+            this.expireAuth();
+          }
+        });
+    },
+    expireAuth() {
+      this.$emit('update:is_auth', false);
+      this.$router.push('/login');
+    },
+    alertMessage(message) {
+      alert(message);
     },
   },
 };

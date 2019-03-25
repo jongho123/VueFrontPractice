@@ -5,7 +5,7 @@ import BaseInputItem from '@/components/BaseInputItem.vue';
 
 const createComponent = propsData => mount(BaseInputItem, { propsData });
 
-describe('BaseInputItem', () => {
+describe('BaseInputItem.vue', () => {
   let component;
   describe('html 렌더링', () => {
     it('render the correct markup', () => {
@@ -29,14 +29,13 @@ describe('BaseInputItem', () => {
     it('input 이벤트 및 emit 데이터', () => {
       const computed = sinon.stub(BaseInputItem.computed, 'listeners');
       let spy;
-
       // Vue 컴포넌트의 computed 에 listeners 함수 대체
-      // 및 input 함수에 spy 함수 심음. 
-      computed.callsFake(() => { 
-        const listener = { 
+      // 및 input 함수에 spy 함수 심음.
+      computed.callsFake(() => {
+        const listener = {
           input: (event) => {
             component.vm.$emit('input', event.target.value);
-          }
+          },
         };
         spy = sinon.spy(listener, 'input');
         return listener;
