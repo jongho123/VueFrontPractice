@@ -1,29 +1,25 @@
 # vuefrontpractice
 
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
+## 모듈 설치
+```sh
+$ npm install
 ```
 
-### Compiles and minifies for production
+### 컴파일 및 실행.
+```sh
+$ npm run serve
 ```
-npm run build
-```
+현재는 서버를 같이 돌려야 함.  
+Vue 만 돌리면 페이지는 보이나 로그인이나 Todo 컨텐츠를 가져올 수 없음.
 
-### Run your tests
+### 빌드
+```sh
+$ npm run build
 ```
-npm run test
-```
+나중에 서버에 빌드되도록 변경할 예정.
 
-### Lints and fixes files
-```
-npm run lint
-```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### 테스트 실행
+```sh
+$ npm run test:unit
+```
