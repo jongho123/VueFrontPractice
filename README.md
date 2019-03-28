@@ -1,5 +1,8 @@
 # vuefrontpractice
 
+## Required
+- npm
+
 ## 모듈 설치
 ```sh
 $ npm install
